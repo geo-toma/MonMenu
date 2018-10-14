@@ -1,7 +1,13 @@
 package com.georges.menu;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import static java.nio.file.StandardOpenOption.APPEND;
 
 public class Order {
     Scanner sc = new Scanner(System.in);
@@ -41,11 +47,10 @@ public class Order {
     public int askMenu(){
         System.out.println("Choix du menu");
         String[] menu = {"Poulet", "Boeuf", "Vegetarian"};
-        int nbMenu = askSomething("Menu", menu);
-        return nbMenu;
+        return askSomething("Menu", menu);
     }
 
-    public void askSide(boolean allSideEnable){
+    public int askSide(boolean allSideEnable){
         System.out.println(" Choix de l'accompagnement");
         String[] side;
         if (allSideEnable){
@@ -53,36 +58,40 @@ public class Order {
         }else {
             side = new String[] {"Riz", "Pas de riz"};
         }
-        this.askSomething("Accompagnement", side);
+        return askSomething("Accompagnement", side);
     }
 
-    public void askDrink(){
+    public int askDrink(){
         System.out.println(" Choix de la boisson");
         String[] drink = {"Eau fraiche", "Eau gazeuse", "Soda"};
-        this.askSomething("Boisson", drink);
+        return askSomething("Boisson", drink);
     }
 
 
-    public void runMenu(){
-        int nb = askMenu();
-        switch (nb){
+    public String runMenu(){
+        int nbMenu = askMenu();
+        int nbSide = -1;
+        int nbDrink = -1;
+        switch (nbMenu){
             case 1:
-                askSide(true);
-                askDrink();
+                nbSide = askSide(true);
+                nbDrink = askDrink();
                 break;
             case 2:
-                askSide(true);
+                nbSide = askSide(true);
                 break;
             case 3:
-                askSide(false);
-                askDrink();
+                nbSide = askSide(false);
+                nbDrink = askDrink();
                 break;
         }
+        return (nbMenu + "," + nbSide + "," + nbDrink + "%n");
     }
 
     public void runmenus(){
+        Path oderPath = Paths.get("order.csv");
         System.out.println("Combien de menu voulez - vous commander ?");
-        int nbQuantity = - 2;
+        int nbQuantity = - 1;
         boolean goodValueOfNbQuanity;
         orderSummary = "Resume de votre commande : %n";
         do {
@@ -96,7 +105,13 @@ public class Order {
             if (goodValueOfNbQuanity) {
                 for (int counter = 0; counter < nbQuantity; counter++) {
                     orderSummary += "%nMenu " + (counter + 1) + " : %n";
-                    this.runMenu();
+                    String oderLine = runMenu();
+                    try {
+                        Files.write(oderPath, String.format(oderLine).getBytes(), APPEND);
+                    } catch (IOException e) {
+                        System.out.println("oops il ya une erreur, reessayer plus tard");
+                        return;
+                    }
                 }
             } else
                 System.out.println(String.format("Vous n'avez pas entrez une bonne valeur. %n Re-entrez le nombre de Menu :"));
