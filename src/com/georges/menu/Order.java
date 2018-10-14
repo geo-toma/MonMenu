@@ -1,5 +1,6 @@
 package com.georges.menu;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Order {
@@ -10,12 +11,17 @@ public class Order {
         for (int i = 1; i <= responses.length; i++)
             System.out.println(i + " - " + responses[i - 1]);
         System.out.println("Que souhaitez-vous comme " + category + "?");
-        int nbResponse = 1;
+        int nbResponse = - 1;
         boolean responseIsGood;
         String choice = "";
         do {
-            nbResponse = sc.nextInt();
-            responseIsGood = (nbResponse >= 1 && nbResponse <= responses.length);
+            try {
+                nbResponse = sc.nextInt();
+                responseIsGood = (nbResponse >= 1 && nbResponse <= responses.length);
+            } catch (InputMismatchException e) {
+                sc.next();
+                responseIsGood = false;
+            }
             if (responseIsGood) {
                 choice = "Vous avez choisi comme " + category + " : " + responses[nbResponse - 1];
                 orderSummary = orderSummary + choice + "%n";
@@ -76,12 +82,25 @@ public class Order {
 
     public void runmenus(){
         System.out.println("Combien de menu voulez - vous commander ?");
-        int nbQuantity = sc.nextInt();
+        int nbQuantity = - 2;
+        boolean goodValueOfNbQuanity;
         orderSummary = "Resume de votre commande : %n";
-        for (int counter = 0; counter < nbQuantity; counter++) {
-            orderSummary += "%nMenu " + (counter + 1) + " : %n";
-            this.runMenu();
-        }
+        do {
+            try {
+                nbQuantity = sc.nextInt();
+                goodValueOfNbQuanity = (nbQuantity >= 1);
+            } catch (InputMismatchException e) {
+                sc.next();
+                goodValueOfNbQuanity = false;
+            }
+            if (goodValueOfNbQuanity) {
+                for (int counter = 0; counter < nbQuantity; counter++) {
+                    orderSummary += "%nMenu " + (counter + 1) + " : %n";
+                    this.runMenu();
+                }
+            } else
+                System.out.println(String.format("Vous n'avez pas entrez une bonne valeur. %n Re-entrez le nombre de Menu :"));
+        } while (!goodValueOfNbQuanity);
         System.out.println("");
         System.out.println(String.format("%n" + orderSummary));
     }
