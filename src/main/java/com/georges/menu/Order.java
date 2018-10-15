@@ -11,7 +11,10 @@ import static java.nio.file.StandardOpenOption.APPEND;
 
 class Order {
     private Scanner sc = new Scanner(System.in);
-    private String orderSummary=" ";
+    private String orderSummary = " ";
+
+    Order() {
+    }
 
     private int askSomething(String category, String[] responses) {
         for (int i = 1; i <= responses.length; i++)
@@ -118,7 +121,7 @@ class Order {
             } else
                 System.out.println(String.format("Vous n'avez pas entrez une bonne valeur. %n Re-entrez le nombre de Menu :"));
         } while (!goodValueOfNbQuanity);
-        System.out.println("");
+        System.out.println();
         System.out.println(String.format("%n" + orderSummary));
     }
 }
