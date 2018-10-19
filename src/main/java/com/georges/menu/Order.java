@@ -9,14 +9,14 @@ import java.util.Scanner;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 
-class Order {
+public class Order {
     private Scanner sc = new Scanner(System.in);
-    private String orderSummary = " ";
+    public String orderSummary = " ";
 
-    Order() {
+    public Order() {
     }
 
-    private int askSomething(String category, String[] responses) {
+    public int askSomething(String category, String[] responses) {
         for (int i = 1; i <= responses.length; i++)
             System.out.println(i + " - " + responses[i - 1]);
         System.out.println("Que souhaitez-vous comme " + category + "?");
@@ -37,7 +37,7 @@ class Order {
                 orderSummary+= choice+"%n";
                 System.out.println(choice);
             } else {
-                boolean isVowel = "aeiouy".contains(Character.toString(category.charAt(0)));
+                boolean isVowel = "aeiouyAEIOUY".contains(Character.toString(category.charAt(0)));
                 if (isVowel)
                     System.out.println("Vous n'avez pas choisi d'" + category + " parmi les choix proposés");
                 else
@@ -48,13 +48,13 @@ class Order {
         return nbResponse;
     }
 
-    private int askMenu(){
+    public int askMenu(){
         System.out.println("Choix du menu");
         String[] menu = {"Poulet", "Boeuf", "Vegetarian"};
         return askSomething("Menu", menu);
     }
 
-    private int askSide(boolean allSideEnable){
+    public int askSide(boolean allSideEnable){
         System.out.println(" Choix de l'accompagnement");
         String[] side;
         if (allSideEnable){
@@ -65,14 +65,14 @@ class Order {
         return askSomething("Accompagnement", side);
     }
 
-    private int askDrink(){
+    public int askDrink(){
         System.out.println(" Choix de la boisson");
         String[] drink = {"Eau fraiche", "Eau gazeuse", "Soda"};
         return askSomething("Boisson", drink);
     }
 
 
-    private String runMenu(){
+    public String runMenu(){
         int nbMenu = askMenu();
         int nbSide = -1;
         int nbDrink = -1;
@@ -92,7 +92,7 @@ class Order {
         return (nbMenu + "," + nbSide + "," + nbDrink + "%n");
     }
 
-    void runmenus(){
+    public void runmenus(){
         Path oderPath = Paths.get("order.csv");
         System.out.println("Combien de menu voulez - vous commander ?");
         int nbQuantity = - 1;
